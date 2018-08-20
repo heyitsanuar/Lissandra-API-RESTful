@@ -162,6 +162,49 @@ function getProductTypes(req, res){
     });
 }
 
+// POST '/upload-product-image/:id' saves images for a product
+function saveProductImages(req, res){
+
+    let productId = req.params.id;
+    
+    if(req.files){
+        let filePath = req.files.image.path; //Gets the path of the image
+        let fileSplit = filePath.split('\\'); //We'll get just the name of the file
+        let fileName = fileSplit[2]; //Cleaning the file name
+    
+        let extSplit = fileName.split('\.');
+        let fileExt = extSplit[1];
+
+        if(fileExt == 'png' || fileExt == 'jpg' || file == 'jpeg' || fileExt == 'gif'){
+
+            Product.findByIdAndUpdate(productId, {images: fileName}, {new: true}, (err, productUpdated) => {
+                if(err)
+                    return res.status(500).send({message: 'Product image could not be updated'});
+                    
+                if(!productUpdated)
+                    return res.status(404).send({message: 'No product found.'});
+                
+                return res.status(200).send({product: productUpdated});
+            });
+
+        }else{
+            removeFilesOfUploads(res, filePath, 'An error has ocurred with extention.');
+        }
+
+    }else{
+        res.status(200).send({message: 'Please select an image.'});
+    }
+
+}
+
+function removeFilesOfUploads(res, filePath, message){
+    fs.unlink(filePath, (err) => {
+        if(err){
+            res.status(200).send({message: message });
+        }
+    });
+}
+
 module.exports = {
     saveProduct,
     updateProduct,
@@ -170,5 +213,6 @@ module.exports = {
     getProducts,
     getProductsByCategory,
     getProductsByType,
-    getProductTypes
+    getProductTypes,
+    saveProductImages
 }

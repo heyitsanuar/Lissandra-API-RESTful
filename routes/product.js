@@ -27,4 +27,7 @@ api.get('/product/:category/:page?', ProductController.getProductsByCategory); /
 api.get('/product/:category/:type/:page?', ProductController.getProductsByType); //Gets products by category and type
 api.get('/product/types/:category', ProductController.getProductTypes); // Gets products types for each category
 
+//Routes image related
+api.post('/upload-product-image/:id', [MiddlewareAuth.ensureAuth, MiddlewareUpload], ProductController.saveProductImages);
+
 module.exports = api;
