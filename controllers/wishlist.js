@@ -16,6 +16,53 @@ function getProducts(req, res){
     });
 }
 
+// POST '/wishlist/:userId/:productId' Adds an item to the user's wishlist
+function addProduct(req, res){
+    //Allocating received variables from params
+    let params = req.params;
+    let userId = params.userId;
+    let productId = params.productId;
+    //Making a flag statement if the product whether the product is listed or not
+    let isOnList = false;
+
+    Wishlist.findOne({user: userId}).populate('products').exec((err, wishlist) => {
+        if(err)
+            return res.status(500).send({message: 'Error while loading wishlist.'});
+            
+        //Checking if wishlist exists, if not, it will be created
+        if(!wishlist){
+            let newWishlist = new Wishlist();
+            newWishlist.user = userId;
+            wishlist = newWishlist;
+        }else{
+            //Checking if product is on list
+            wishlist.products.forEach(currentProduct => {
+                if(currentProduct == productId){
+                    isOnList = true;
+                }
+            });
+        }
+
+        //If products is listed, then it won't be taken into account and a message will be returned
+        if(isOnList)
+            return res.status(200).send({message: 'Product is already on list.'});
+        
+        //Adding product as the last item of the list, afterwards the lis will be saved
+        wishlist.products.unshift(productId);
+        
+        wishlist.save((err, wishlistUpdated) => {
+            if(err)
+                return res.status(500).send({message: 'Error while saving product.'});
+
+            if(!wishlistUpdated)
+                return res.status(404).send({message: 'Product could not be saved.'});
+            
+            return res.status(200).send({wishlist: wishlistUpdated});
+        });
+    });
+}
+
 module.exports = {
-    getProducts
+    getProducts,
+    addProduct
 };
