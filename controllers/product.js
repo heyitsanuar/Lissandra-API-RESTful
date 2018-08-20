@@ -87,9 +87,28 @@ function getProduct(req, res){
     });
 }
 
+// GET '/product' looks for all existing products
+function getProducts(req, res){
+    //Pagination setup
+    let page = (req.params.page) ? req.params.page : 1;
+    let itemsPerPage = 9;
+    
+    Product.find({}).paginate(page, itemsPerPage, (err, products, total) => {
+        if(err)
+            return res.status(500).send({message: 'Error while looking for products.'});
+        
+        return res.status(200).send({
+            pages: Math.ceil(total/itemsPerPage),
+            total: total,
+            products: products
+        });
+    });
+}
+
 module.exports = {
     saveProduct,
     updateProduct,
     deleteProduct,
-    getProduct
+    getProduct,
+    getProducts
 }
