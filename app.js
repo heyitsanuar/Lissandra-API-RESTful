@@ -7,6 +7,9 @@ let bodyParser = require('body-parser');
 //App instance
 let app = express();
 
+//Load routes
+let UserRoutes = require('./routes/user');
+
 //Middlewares
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -20,5 +23,8 @@ app.use((req, res, next) => {
 
 	next();
 });
+
+//Route loading
+app.use('/api', UserRoutes);
 
 module.exports = app;
