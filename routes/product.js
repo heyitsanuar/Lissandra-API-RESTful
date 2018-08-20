@@ -18,5 +18,6 @@ let ProductController = require('../controllers/product');
 //Routes for basic CRUDs
 api.post('/product', [MiddlewareAuth.ensureAuth, MiddlewareRole.isAdmin], ProductController.saveProduct); //Saves a new product
 api.put('/product/:id', [MiddlewareAuth.ensureAuth, MiddlewareRole.isAdmin], ProductController.updateProduct); //Updates an existing product
+api.delete('/product/:id', [MiddlewareAuth.ensureAuth, MiddlewareRole.isAdmin], ProductController.deleteProduct); //Removes a product
 
 module.exports = api;

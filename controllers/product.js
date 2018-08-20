@@ -55,7 +55,24 @@ function updateProduct(req, res){
     });
 }
 
+// DELETE '/product/:id' remove a product by its ID
+function deleteProduct(req, res){
+    //Receiving request params
+    let productId = req.params.id;
+
+    Product.findByIdAndRemove(productId, (err, productRemoved) => {
+        if(err)
+            return res.status(500).send({message: 'Error while removing product.'});
+        
+        if(!productRemoved)
+            return res.status(404).send({message: 'No product found'});
+
+        return res.status(200).send({message: 'Product removed successfully.'});
+    });
+}
+
 module.exports = {
     saveProduct,
-    updateProduct
+    updateProduct,
+    deleteProduct
 }
