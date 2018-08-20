@@ -84,7 +84,47 @@ function saveUser(req, res){
     
 }
 
+// PUT '/user/:id' updates a user depending on its ID
+function updateUser(req, res){
+    let update = req.body;
+    let userId = req.params.id;
+
+    //If it the ID is different from the owner's account you won't have permission to update it.
+    if(userId != req.user.sub)
+        return res.status(500).send({message: 'You do not have permisso to update this user.'});
+    
+    User.find({email: update.email.toLowerCase()}, (err, users) => {
+        if(err)
+            return res.status(500).send({message: 'Error ocurred while searching for the user.'});
+        
+        var userIsSet = false;
+    
+        users.forEach((user) => {
+            if(user && user._id != userId)
+                userIsSet = true;
+        });
+
+        if(userIsSet)
+            return res.status(500).send({message: 'Email is in use already.'});
+
+        User.findByIdAndUpdate(userId, update, {new: true}, (err, userUpdated) => {
+            if(err)
+                return res.status(500).send({message: 'Error ocurred while updating the user.'});
+
+            if(!userUpdated)
+                return res.status(404).send({message: 'User could not be updated.'});
+            
+            userUpdated.password = undefined;
+
+            return res.status(200).send({user: userUpdated});
+        });
+
+    });
+
+}
+
 module.exports = {
     login,
-    saveUser
+    saveUser,
+    updateUser
 };
