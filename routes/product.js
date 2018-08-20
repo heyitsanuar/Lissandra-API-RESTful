@@ -20,4 +20,7 @@ api.post('/product', [MiddlewareAuth.ensureAuth, MiddlewareRole.isAdmin], Produc
 api.put('/product/:id', [MiddlewareAuth.ensureAuth, MiddlewareRole.isAdmin], ProductController.updateProduct); //Updates an existing product
 api.delete('/product/:id', [MiddlewareAuth.ensureAuth, MiddlewareRole.isAdmin], ProductController.deleteProduct); //Removes a product
 
+//Routes for listings
+api.get('/product/:id', ProductController.getProduct); //Gets a product by its ID
+
 module.exports = api;

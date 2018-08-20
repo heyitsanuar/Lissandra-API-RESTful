@@ -71,8 +71,25 @@ function deleteProduct(req, res){
     });
 }
 
+// GET '/product/:id' looks for a product by its id
+function getProduct(req, res){
+    //Receiving request params
+    let productId = req.params.id;
+
+    Product.findById(productId, (err, product) => {
+        if(err)
+            return res.status(500).send({message: 'Error while looking for product.'});
+        
+        if(!product)
+            return res.status(404).send({message: 'No product found.'});
+
+        return res.status(200).send({product: product});
+    });
+}
+
 module.exports = {
     saveProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getProduct
 }
