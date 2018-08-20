@@ -24,5 +24,6 @@ api.delete('/product/:id', [MiddlewareAuth.ensureAuth, MiddlewareRole.isAdmin], 
 api.get('/product/:id', ProductController.getProduct); //Gets a product by its ID
 api.get('/product', ProductController.getProducts); //Gets all existing products
 api.get('/product/:category/:page?', ProductController.getProductsByCategory); //Gets products by category
+api.get('/product/:category/:type/:page?', ProductController.getProductsByType); //Gets products by category and type
 
 module.exports = api;
