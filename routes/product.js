@@ -29,5 +29,6 @@ api.get('/product/types/:category', ProductController.getProductTypes); // Gets 
 
 //Routes image related
 api.post('/upload-product-image/:id', [MiddlewareAuth.ensureAuth, MiddlewareUpload], ProductController.saveProductImages);
+api.get('/get-product-image/:imageName', ProductController.getProductImage);
 
 module.exports = api;

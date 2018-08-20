@@ -205,6 +205,21 @@ function removeFilesOfUploads(res, filePath, message){
     });
 }
 
+//GET '/get-product-image/:imageName' gets the images of an existing product
+function getProductImage(req, res){
+    let imageFile = req.params.imageName;
+    let pathFile = './uploads/products/'+imageFile;
+
+    fs.exists(pathFile, (exists) => {
+
+        if(exists){
+            res.sendFile(path.resolve(pathFile));
+        }else{
+            res.status(200).send({message: 'Image does not exist.'});
+        }
+    });
+}
+
 module.exports = {
     saveProduct,
     updateProduct,
@@ -214,5 +229,6 @@ module.exports = {
     getProductsByCategory,
     getProductsByType,
     getProductTypes,
-    saveProductImages
+    saveProductImages,
+    getProductImage
 }
