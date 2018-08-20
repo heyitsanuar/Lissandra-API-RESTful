@@ -9,6 +9,7 @@ let app = express();
 
 //Load routes
 let UserRoutes = require('./routes/user');
+let ProductRoutes  = require('./routes/product');
 
 //Middlewares
 app.use(bodyParser.urlencoded({extended: false}));
@@ -26,5 +27,6 @@ app.use((req, res, next) => {
 
 //Route loading
 app.use('/api', UserRoutes);
+app.use('/api', ProductRoutes);
 
 module.exports = app;
