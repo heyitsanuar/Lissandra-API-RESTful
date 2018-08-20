@@ -8,5 +8,6 @@ let MiddlewareAuth = require('../middlewares/authenticated');
 let BagController = require('../controllers/bag');
 
 api.get('/bag/:userId', MiddlewareAuth.ensureAuth, BagController.getProducts); //Gets the existing products from the given user's bag
+api.post('/bag/:userId/:productId', MiddlewareAuth.ensureAuth, BagController.addProduct); //Adds an item to the user's bag
 
 module.exports = api;
