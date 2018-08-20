@@ -25,5 +25,6 @@ api.get('/product/:id', ProductController.getProduct); //Gets a product by its I
 api.get('/product', ProductController.getProducts); //Gets all existing products
 api.get('/product/:category/:page?', ProductController.getProductsByCategory); //Gets products by category
 api.get('/product/:category/:type/:page?', ProductController.getProductsByType); //Gets products by category and type
+api.get('/product/types/:category', ProductController.getProductTypes); // Gets products types for each category
 
 module.exports = api;

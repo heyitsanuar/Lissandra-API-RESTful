@@ -150,6 +150,18 @@ function getProductsByType(req, res){
     });
 }
 
+// GET '/product/:category/types' gets product types for each category
+function getProductTypes(req, res){
+    let category = req.params.category;
+
+    Product.find({category: category}).distinct('type', (err, foundTypes) => {
+        if(err)
+            return res.status(500).send({message: 'Error while searching for types.'});
+        
+        return res.status(200).send({types: foundTypes});
+    });
+}
+
 module.exports = {
     saveProduct,
     updateProduct,
@@ -157,5 +169,6 @@ module.exports = {
     getProduct,
     getProducts,
     getProductsByCategory,
-    getProductsByType
+    getProductsByType,
+    getProductTypes
 }
