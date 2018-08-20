@@ -62,7 +62,41 @@ function addProduct(req, res){
     });
 }
 
+// DELETE '/bag/:userId/:productId' Deletes an existing item from the user's bag
+function deleteProduct(req, res){
+    //Allocating received variables from params
+    let params = req.params;
+    let userId = params.userId;
+    let productId = params.productId;
+
+    Bag.findOne({user: userId, products: { $in: [productId]} }, (err, bag) => {
+        if(err)
+            return res.status(500).send({message: 'Error while loading bag.'});
+        
+        if(!bag)
+            return res.status(404).send({message: 'Bag not found.'});
+
+        //Moving products to temporal product array
+        let products = bag.products;
+        let indexToRemove = products.indexOf(productId);
+
+        //Removing the index from the array
+        products.splice(indexToRemove, 1);
+        bag.products = products;
+        
+        bag.save((err, bagUpdated) => {
+            if(err)
+                return res.status(500).send({message: 'Error while saving product.'});
+            
+            bagUpdated.populate('products', () => {
+                return res.status(200).send({bag: bagUpdated})
+            });
+        });
+    });
+}
+
 module.exports = {
     getProducts,
-    addProduct
+    addProduct,
+    deleteProduct
 };
