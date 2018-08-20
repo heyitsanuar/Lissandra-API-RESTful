@@ -38,6 +38,24 @@ function saveProduct(req, res){
     });
 }
 
+// PUT '/product/:id' updates a product by its ID
+function updateProduct(req, res){
+    //Receiving request params
+    let update = req.body;
+    let productId = req.params.id;
+
+    Product.findByIdAndUpdate(productId, update, {new: true}, (err, productUpdated) => {
+        if(err)
+            return res.status(500).send({message: 'Error while updating product.'});
+        
+        if(!productUpdated)
+            return res.status(404).send({message: 'No product found'});
+        
+        return res.status(200).send({product: productUpdated});
+    });
+}
+
 module.exports = {
-    saveProduct
+    saveProduct,
+    updateProduct
 }
